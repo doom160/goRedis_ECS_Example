@@ -59,6 +59,13 @@ jobs:
         docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+    - name: Amazon ECS "Deploy Task Definition" Action for GitHub Actions
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: tasks-definition/service.json
+        service: go-redis
+        cluster: go-redis
+
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
