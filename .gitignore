@@ -15,4 +15,5 @@
 # vendor/
 *tfstate*
 .terraform
-go.*
+vars.tf
+
