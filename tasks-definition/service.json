@@ -1,12 +1,12 @@
 [
     {
       "name": "primary",
-      "image": "DOCKER_IMAGE:DOCKER_TAG",
+      "image": "$DOCKER_IMAGE:$DOCKER_TAG",
       "cpu": 256,
       "memory": 512,
       "essential": true,
       "requiresCompatibilities": "FARGATE",
-      "command" : ["MEMCACHE_URL"],
+      "command" : ["$MEMCACHE_URL"],
       "portMappings": [
         {
           "containerPort": 8080

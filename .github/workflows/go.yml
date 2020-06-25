@@ -62,13 +62,10 @@ jobs:
     - name: Set MEMCACHE_URL
       run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
       
-    - uses: microsoft/variable-substitution@v1 
+    - uses: datamonsters/replace-action
       with:
         files: 'tasks-definition/service.json'
-      env:
-        MEMCACHE_URL: ${{ env.MEMCACHE_URL }}
-        DOCKER_IMAGE: ${{ steps.login-ecr.outputs.registry }}/go-redis
-        DOCKER_TAG:  ${{ github.sha }}
+        replacements: '$DOCKER_TAG=${{ github.sha }},$DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,$MEMCACHE_URL=${{ env.MEMCACHE_URL }}'
 
     - name: Read file
       run: cat tasks-definition/service.json
