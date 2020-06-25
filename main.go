@@ -17,7 +17,7 @@ func main() {
 	if len(os.Args) == 2 {
 		redisAddress = os.Args[1]
 	}
-
+	fmt.Println("connecting to:" + redisAddress)
 	http.HandleFunc("/", root)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
 	http.ListenAndServe(":8080", nil)
@@ -40,6 +40,7 @@ func redisPing() {
 }
 
 func redisGetValue(key string) string {
+	fmt.Println("getting from:" + redisAddress)
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set
@@ -56,6 +57,7 @@ func redisGetValue(key string) string {
 }
 
 func redisSetValue(key string, value string) {
+	fmt.Println("setting to:" + redisAddress)
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set
