@@ -63,7 +63,7 @@ jobs:
       run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
       
     - name: Replace task definition
-      uses: ./.github/actions/replace
+      uses: datamonsters/replace-action
       with:
         files: 'tasks-definition/service.json'
         replacements: '$DOCKER_TAG=${{ github.sha }},$DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,$MEMCACHE_URL=${{ env.MEMCACHE_URL }}'
