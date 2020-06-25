@@ -3,7 +3,7 @@
   "networkMode": "awsvpc", 
   "containerDefinitions": [
       {
-          "name": "primary",
+          "name": "app",
           "image": "$DOCKER_IMAGE:$DOCKER_TAG",
           "cpu": 256,
           "memory": 512,

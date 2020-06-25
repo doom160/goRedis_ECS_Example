@@ -8,6 +8,10 @@ variable "public_subnets_cidr" {
 	default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
+variable "private_subnets_cidr" {
+	default = ["10.0.3.0/24", "10.0.4.0/24"]
+}
+
 variable "azs" {
 	default = ["ap-southeast-1a", "ap-southeast-1b"]
 }
@@ -26,6 +30,13 @@ resource "aws_subnet" "go-public-subnet" {
   count = length(var.public_subnets_cidr)
   vpc_id = aws_vpc.go-vpc.id
   cidr_block = element(var.public_subnets_cidr,count.index)
+  availability_zone = element(var.azs,count.index)
+}
+
+resource "aws_subnet" "go-private-subnet" {
+  count = length(var.private_subnets_cidr)
+  vpc_id = aws_vpc.go-vpc.id
+  cidr_block = element(var.private_subnets_cidr,count.index)
   availability_zone = element(var.azs,count.index)
 }
 
