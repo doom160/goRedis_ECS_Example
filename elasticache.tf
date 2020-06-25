@@ -14,4 +14,7 @@ resource "aws_elasticache_cluster" "go_elasticache" {
   engine_version       = "3.2.10"
   port                 = 6379
   security_group_ids   = [aws_security_group.allow_all.id]
+  tags = {
+    application="go-redis"
+  }
 }

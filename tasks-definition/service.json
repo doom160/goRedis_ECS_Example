@@ -1,0 +1,14 @@
+[
+    {
+      "name": "primary",
+      "image": "docker_image:docker_tag",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080
+        }
+      ]
+    }
+]
