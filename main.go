@@ -20,6 +20,7 @@ func main() {
 	fmt.Println("connecting to:" + redisAddress)
 	http.HandleFunc("/", root)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
+	http.HandleFunc("/healthcheck", healthcheck)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -27,6 +28,10 @@ func root(w http.ResponseWriter, r *http.Request) {
 	var customerCount = redisGetValue("customer")
 	fmt.Fprintf(w, "Visitor count: "+customerCount)
 	redisSetValue("customer", customerCount)
+}
+
+func healthcheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "ok")
 }
 
 func redisPing() {
