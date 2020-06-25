@@ -66,8 +66,9 @@ jobs:
       with:
         files: 'tasks-definition/service.json'
       env:
-        memcache_url: ${{ env.MEMCACHE_URL }}
-        docker_tag:  ${{ github.sha }}
+        MEMCACHE_URL: ${{ env.MEMCACHE_URL }}
+        DOCKER_IMAGE: ${{ steps.login-ecr.outputs.registry }}/go-redis
+        DOCKER_TAG:  ${{ github.sha }}
 
     - name: Read file
       run: cat tasks-definition/service.json

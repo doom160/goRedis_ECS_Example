@@ -1,10 +1,12 @@
 [
     {
       "name": "primary",
-      "image": "docker_image:docker_tag",
+      "image": "DOCKER_IMAGE:DOCKER_TAG",
       "cpu": 256,
       "memory": 512,
       "essential": true,
+      "requiresCompatibilities": "FARGATE",
+      "command" : ["MEMCACHE_URL"],
       "portMappings": [
         {
           "containerPort": 8080
