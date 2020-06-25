@@ -59,6 +59,19 @@ jobs:
         docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+    - name: Set MEMCACHE_URL
+      run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
+      
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: 'tasks-definition/service.json'
+      env:
+        memcache_url: ${{ env.MEMCACHE_URL }}
+        docker_tag:  ${{ github.sha }}
+
+    - name: Read file
+      run: cat tasks-definition/service.json
+      
     - name: Amazon ECS "Deploy Task Definition" Action for GitHub Actions
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
