@@ -63,7 +63,7 @@ jobs:
       run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
   
     - name: Generate task definition file
-      run: aws ecs describe-task-definition --task-definition go_redis_task_definition  --query taskDefinition > tasks-definition/task.json
+      run: aws ecs describe-task-definition --task-definition go_redis_task_definition  --query taskDefinition > tasks-definition/service.json
 
     - name: Replace task definition
       uses: datamonsters/replace-action@v2
