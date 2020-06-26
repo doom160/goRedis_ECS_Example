@@ -20,7 +20,7 @@
       }
     ],
     "command": [
-      "MEMCACHE_URL"
+      "MEMCACHE_URL:6379"
     ],
     "linuxParameters": null,
     "cpu": 256,
