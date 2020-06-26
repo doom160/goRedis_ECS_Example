@@ -61,14 +61,8 @@ jobs:
 
     - name: Set MEMCACHE_URL
       run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
-      
-    - name: Set SUBNET_ID
-      run: echo ::set-env name=SUBNET_ID::$(aws ec2 describe-subnets --filter "Name=tag:application,Values=go-redis" --output text --query 'Subnets[*].SubnetId' | sed 's/\t/\",\"/g'')
-      
-    - name: Set VPC_ID
-      run: echo ::set-env name=VPC_ID::$aws ec2 describe-subnets --filter "Name=tag:application,Values=go-redis" --output text --query 'Subnets[1].VpcId'' | sed 's/\t/\",\"/g'')
-      
-    - name: Set VPC_ID
+  
+    - name: Generate task definition file
       run: aws ecs describe-task-definition --task-definition go_redis_task_definition  --query taskDefinition > tasks-definition/task.json
 
     - name: Replace task definition
