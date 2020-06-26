@@ -1,7 +1,7 @@
 # goRedis_ECS_Example
 ## Architecture Diagram
 
-![Architecture Diagram](screenshot/aws.png)
+![Architecture Diagram](screenshot/aws.png?raw=true "Architecture Diagram")
 
 This is built in Golang. This application fetches data from Elasticache Redis and show visitor count.
 
@@ -13,4 +13,5 @@ This is built in Golang. This application fetches data from Elasticache Redis an
 `terraform apply`
 1. Any feature branch PR triggers pipeline
 `.github\workflows\go.yml`
-1. Visit this website: XXX
+1. Run following command to get your ALB DNS Name to visit your website
+` aws elbv2 describe-load-balancers --output text --query "LoadBalancers[?LoadBalancerName =='go-redis'].DNSName"`
