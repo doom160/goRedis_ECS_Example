@@ -69,7 +69,7 @@ jobs:
       uses: datamonsters/replace-action@v2
       with:
         files: 'tasks-definition/service.json'
-        replacements: '$DOCKER_TAG=${{ github.sha }},$DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,$MEMCACHE_URL=${{ env.MEMCACHE_URL }},$SUBNET_ID=${{ env.SUBNET_ID }},$VPC_ID=${{ env.VPC_ID }}'
+        replacements: 'DOCKER_TAG=${{ github.sha }},DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,MEMCACHE_URL=${{ env.MEMCACHE_URL }}'
 
     - name: Read file
       run: cat tasks-definition/service.json
