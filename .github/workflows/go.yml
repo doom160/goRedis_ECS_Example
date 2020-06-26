@@ -77,7 +77,7 @@ jobs:
     - name: Amazon ECS "Deploy Task Definition" Action for GitHub Actions
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: tasks-definition/task.json
+        task-definition: tasks-definition/service.json
         service: go-redis
         cluster: go-redis
 
