@@ -15,6 +15,7 @@ resource "aws_ecs_task_definition" "go_redis_task_definition" {
   task_role_arn = aws_iam_role.go_redis_iam_role.arn
   cpu = 256
   memory = 512
+  network_mode = "awsvpc"
 }
 
 resource "aws_lb_target_group" "go_redis_target_group" {
@@ -37,18 +38,33 @@ resource "aws_lb" "go_redis_lb" {
   }
 }
 
+resource "aws_lb_listener" "go_redis_lb_listener" {
+  load_balancer_arn = "${aws_lb.go_redis_lb.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.go_redis_target_group.arn}"
+  }
+}
+
 resource "aws_ecs_service" "go_ecs_service" {
   name            = "go-redis"
   cluster         = aws_ecs_cluster.go_redis_ecs_cluster.id
   task_definition = aws_ecs_task_definition.go_redis_task_definition.arn
   desired_count   = 1
-  iam_role        = aws_iam_role.go_redis_iam_role.arn
   depends_on      = ["aws_lb.go_redis_lb", "aws_lb_target_group.go_redis_target_group"]
   launch_type     = "FARGATE"
   load_balancer {
     target_group_arn = aws_lb_target_group.go_redis_target_group.arn
     container_name   = "app"
     container_port   = 8080
+  }
+  network_configuration {
+    subnets = aws_subnet.go-public-subnet.*.id
+    security_groups = [ aws_security_group.allow_all.id ]
+    assign_public_ip = true
   }
 }
 

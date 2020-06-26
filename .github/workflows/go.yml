@@ -62,11 +62,20 @@ jobs:
     - name: Set MEMCACHE_URL
       run: echo ::set-env name=MEMCACHE_URL::$(aws elasticache describe-cache-clusters --cache-cluster-id go-elasticache --output text --show-cache-node-info --query 'CacheClusters[*].CacheNodes[*].Endpoint.Address')
       
+    - name: Set SUBNET_ID
+      run: echo ::set-env name=SUBNET_ID::$(aws ec2 describe-subnets --filter "Name=tag:application,Values=go-redis" --output text --query 'Subnets[*].SubnetId' | sed 's/\t/\",\"/g'')
+      
+    - name: Set VPC_ID
+      run: echo ::set-env name=VPC_ID::$aws ec2 describe-subnets --filter "Name=tag:application,Values=go-redis" --output text --query 'Subnets[1].VpcId'' | sed 's/\t/\",\"/g'')
+      
+    - name: Set VPC_ID
+      run: aws ecs describe-task-definition --task-definition go_redis_task_definition  --query taskDefinition > tasks-definition/task.json
+
     - name: Replace task definition
       uses: datamonsters/replace-action@v2
       with:
         files: 'tasks-definition/service.json'
-        replacements: '$DOCKER_TAG=${{ github.sha }},$DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,$MEMCACHE_URL=${{ env.MEMCACHE_URL }}'
+        replacements: '$DOCKER_TAG=${{ github.sha }},$DOCKER_IMAGE=${{ steps.login-ecr.outputs.registry }}/go-redis,$MEMCACHE_URL=${{ env.MEMCACHE_URL }},$SUBNET_ID=${{ env.SUBNET_ID }},$VPC_ID=${{ env.VPC_ID }}'
 
     - name: Read file
       run: cat tasks-definition/service.json
@@ -74,7 +83,7 @@ jobs:
     - name: Amazon ECS "Deploy Task Definition" Action for GitHub Actions
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: tasks-definition/service.json
+        task-definition: tasks-definition/task.json
         service: go-redis
         cluster: go-redis
 

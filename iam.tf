@@ -23,5 +23,5 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "go_redis_ecs_iam_policy" {
     role = aws_iam_role.go_redis_iam_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
