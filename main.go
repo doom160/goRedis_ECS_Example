@@ -20,17 +20,18 @@ func main() {
 	fmt.Println("connecting to:" + redisAddress)
 	http.HandleFunc("/", root)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
-	http.HandleFunc("/healthcheck", healthcheck)
+	http.HandleFunc("/health", healthcheck)
 	http.ListenAndServe(":8080", nil)
 }
 
 func root(w http.ResponseWriter, r *http.Request) {
-	var customerCount = redisGetValue("customer")
-	fmt.Fprintf(w, "Visitor count: "+customerCount)
-	redisSetValue("customer", customerCount)
+	var visitorCount = redisGetValue("visitor")
+	fmt.Fprintf(w, "Visitor count: "+visitorCount)
+	redisSetValue("visitor", visitorCount)
 }
 
 func healthcheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("healthcheck")
 	fmt.Fprintf(w, "ok")
 }
 
@@ -45,7 +46,6 @@ func redisPing() {
 }
 
 func redisGetValue(key string) string {
-	fmt.Println("getting from:" + redisAddress)
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set
@@ -62,7 +62,6 @@ func redisGetValue(key string) string {
 }
 
 func redisSetValue(key string, value string) {
-	fmt.Println("setting to:" + redisAddress)
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set

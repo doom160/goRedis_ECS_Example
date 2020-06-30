@@ -24,6 +24,11 @@ resource "aws_lb_target_group" "go_redis_target_group" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.go-vpc.id
   target_type = "ip"
+
+  health_check {
+    path = "/health"
+    healthy_threshold = 5
+  }
 }
 
 resource "aws_lb" "go_redis_lb" {
@@ -39,13 +44,13 @@ resource "aws_lb" "go_redis_lb" {
 }
 
 resource "aws_lb_listener" "go_redis_lb_listener" {
-  load_balancer_arn = "${aws_lb.go_redis_lb.arn}"
+  load_balancer_arn = aws_lb.go_redis_lb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.go_redis_target_group.arn}"
+    target_group_arn = aws_lb_target_group.go_redis_target_group.arn
   }
 }
 
@@ -62,8 +67,8 @@ resource "aws_ecs_service" "go_ecs_service" {
     container_port   = 8080
   }
   network_configuration {
-    subnets = aws_subnet.go-public-subnet.*.id
-    security_groups = [ aws_security_group.allow_all.id ]
+    subnets = aws_subnet.go-private-subnet.*.id
+    security_groups = [ aws_security_group.internal.id ]
     assign_public_ip = true
   }
 }
