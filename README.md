@@ -1,7 +1,7 @@
 # goRedis_ECS_Example
 ## Architecture Diagram
 
-![Architecture Diagram](screenshots/aws.png?raw=true "Architecture Diagram")
+![Architecture Diagram](screenshots/aws.jpg?raw=true "Architecture Diagram")
 
 This is built in Golang. This application fetches data from Elasticache Redis and show visitor count.
 
