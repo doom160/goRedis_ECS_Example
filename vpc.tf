@@ -53,7 +53,7 @@ resource "aws_subnet" "go-private-subnet" {
 
 resource "aws_nat_gateway" "go_redis_nat_gw" {
   allocation_id = aws_eip.go_redis_eip.id
-  subnet_id     = aws_subnet.go-private-subnet[1].id
+  subnet_id     = aws_subnet.go-public-subnet[0].id
   depends_on = ["aws_internet_gateway.go-igw"]
   tags = {
     Name = "go-redis"
@@ -129,8 +129,8 @@ resource "aws_security_group" "allow_all" {
 
   ingress {
     description = "TLS from VPC"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 0
+    to_port     = 0
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

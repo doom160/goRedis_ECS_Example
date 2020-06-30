@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "go_redis_target_group" {
   target_type = "ip"
 
   health_check {
-    path = "/healthcheck"
+    path = "/health"
     healthy_threshold = 5
   }
 }
@@ -50,7 +50,7 @@ resource "aws_lb_listener" "go_redis_lb_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.go_redis_target_group.arn}"
+    target_group_arn = aws_lb_target_group.go_redis_target_group.arn
   }
 }
 
@@ -68,7 +68,7 @@ resource "aws_ecs_service" "go_ecs_service" {
   }
   network_configuration {
     subnets = aws_subnet.go-private-subnet.*.id
-    security_groups = [ aws_security_group.allow_all.id ]
+    security_groups = [ aws_security_group.internal.id ]
     assign_public_ip = true
   }
 }
