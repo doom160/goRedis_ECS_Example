@@ -94,10 +94,9 @@ resource "aws_route_table_association" "go-associate-public" {
   route_table_id = aws_route_table.go-public-rt.id
 }
 
-# Route table association with public subnets
-resource "aws_route_table_association" "go-associate-private" {
-  count =  length(var.private_subnets_cidr)
-  subnet_id      = element(aws_subnet.go-private-subnet.*.id,count.index)
+# Route table association with private subnets
+resource "aws_main_route_table_association" "go-associate-private" {
+  vpc_id = aws_vpc.go-vpc.id
   route_table_id = aws_route_table.go-private-rt.id
 }
 
@@ -108,9 +107,9 @@ resource "aws_security_group" "internal" {
 
   ingress {
     description = "TLS from VPC"
-    from_port   = 80
-    to_port     = 6379
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["10.0.0.0/16"]
   }
 
@@ -131,7 +130,7 @@ resource "aws_security_group" "allow_all" {
     description = "TLS from VPC"
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
