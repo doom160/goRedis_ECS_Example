@@ -45,8 +45,8 @@
     "healthCheck": {
       "retries": 3,
       "command": [
-          "CMD-SHELL",
-          "curl -f http://localhost:8080/health || exit 1"
+          "CMD",
+          "curl","-f", "http://127.0.0.1:8080/health"
       ],
       "timeout": 5,
       "interval": 30,
